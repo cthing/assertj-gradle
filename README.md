@@ -4,7 +4,7 @@
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.cthing/assertj-gradle/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.cthing/assertj-gradle)
 [![javadoc](https://javadoc.io/badge2/org.cthing/assertj-gradle/javadoc.svg)](https://javadoc.io/doc/org.cthing/assertj-gradle)
 
-This library provides custom [AssertJ](https://assertj.github.io/doc/) assertions for Gradle plugin project tests.
+This Java library provides custom [AssertJ](https://assertj.github.io/doc/) assertions for Gradle plugin project tests.
 
 ## Usage
 The library is available from [Maven Central](https://repo.maven.apache.org/maven2/org/cthing/assertj-gradle/) using the following Maven dependency:
