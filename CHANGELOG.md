@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+### Added
+
+- Gradle [Provider](https://docs.gradle.org/current/javadoc/org/gradle/api/provider/Provider.html) assertions
+- `GradleAssertions` class provides a single import for all Gradle assertions
+
+### Changed
+
+- JSpecify is now required as part of the plugin's API
+
 ## [1.0.0] - 2024-12-24
 
 ### Added

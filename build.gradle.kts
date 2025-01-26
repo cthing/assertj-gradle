@@ -28,7 +28,7 @@ plugins {
     alias(libs.plugins.versions)
 }
 
-version = ProjectVersion("1.0.1", BuildType.snapshot)
+version = ProjectVersion("2.0.0", BuildType.snapshot)
 group = "org.cthing"
 description = "Custom AssertJ assertions for Gradle plugin project tests."
 
@@ -40,9 +40,8 @@ java {
 
 dependencies {
     api(libs.assertj)
+    api(libs.jspecify)
     api(gradleApi())
-
-    implementation(libs.jspecify)
 
     testImplementation(libs.junitApi)
 

@@ -14,7 +14,7 @@ import org.gradle.api.reporting.Reporting;
 
 
 /**
- * Custom AssertJ assertions for unit testing Gradle projects.
+ * Custom AssertJ assertions for unit testing a Gradle {@link Project}.
  */
 @SuppressWarnings("UnusedReturnValue")
 public class GradleProjectAssert extends AbstractAssert<GradleProjectAssert, Project> {
@@ -39,7 +39,7 @@ public class GradleProjectAssert extends AbstractAssert<GradleProjectAssert, Pro
     }
 
     /**
-     * Tests whether the Gradle project contains the specified extensions.
+     * Verifies that the Gradle project contains the specified extensions.
      *
      * @param extensionNames  Names of the project extensions to check
      * @return This assertion
@@ -58,7 +58,7 @@ public class GradleProjectAssert extends AbstractAssert<GradleProjectAssert, Pro
     }
 
     /**
-     * Tests whether the Gradle project does not contain the specified extensions.
+     * Verifies that the Gradle project does not contain the specified extensions.
      *
      * @param extensionNames  Names of the project extensions to check
      * @return This assertion
@@ -77,7 +77,7 @@ public class GradleProjectAssert extends AbstractAssert<GradleProjectAssert, Pro
     }
 
     /**
-     * Tests whether the Gradle project contains the specified extension of the specified type.
+     * Verifies that the Gradle project contains the specified extension of the specified type.
      *
      * @param extensionName  Name of the project extensions to check
      * @param type Expected type of the extension
@@ -98,7 +98,7 @@ public class GradleProjectAssert extends AbstractAssert<GradleProjectAssert, Pro
     }
 
     /**
-     * Tests whether the Gradle project contains an extension of the specified type.
+     * Verifies that the Gradle project contains an extension of the specified type.
      *
      * @param type Expected type of the extension
      * @return This assertion
@@ -116,7 +116,7 @@ public class GradleProjectAssert extends AbstractAssert<GradleProjectAssert, Pro
     }
 
     /**
-     * Tests whether the Gradle project contains the specified configurations.
+     * Verifies that the Gradle project contains the specified configurations.
      *
      * @param configurationNames  Names of the project configurations to check
      * @return This assertion
@@ -135,7 +135,7 @@ public class GradleProjectAssert extends AbstractAssert<GradleProjectAssert, Pro
     }
 
     /**
-     * Tests whether the Gradle project does not contain the specified configurations.
+     * Verifies that the Gradle project does not contain the specified configurations.
      *
      * @param configurationNames  Names of the project configurations to check
      * @return This assertion
@@ -154,7 +154,7 @@ public class GradleProjectAssert extends AbstractAssert<GradleProjectAssert, Pro
     }
 
     /**
-     * Tests whether the Gradle project contains the specified plugins.
+     * Verifies that the Gradle project contains the specified plugins.
      *
      * @param pluginIds  Identifiers of the plugins to check
      * @return This assertion
@@ -172,7 +172,7 @@ public class GradleProjectAssert extends AbstractAssert<GradleProjectAssert, Pro
     }
 
     /**
-     * Tests whether the Gradle project does not contain the specified plugins.
+     * Verifies that the Gradle project does not contain the specified plugins.
      *
      * @param pluginIds  Identifiers of the plugins to check
      * @return This assertion
@@ -190,7 +190,7 @@ public class GradleProjectAssert extends AbstractAssert<GradleProjectAssert, Pro
     }
 
     /**
-     * Tests whether the Gradle project contains the specified tasks.
+     * Verifies that the Gradle project contains the specified tasks.
      *
      * @param taskNames  Names of the tasks to check
      * @return This assertion
@@ -208,7 +208,7 @@ public class GradleProjectAssert extends AbstractAssert<GradleProjectAssert, Pro
     }
 
     /**
-     * Tests whether the Gradle project does not contain the specified tasks.
+     * Verifies that the Gradle project does not contain the specified tasks.
      *
      * @param taskNames  Names of the tasks to check
      * @return This assertion
@@ -226,7 +226,7 @@ public class GradleProjectAssert extends AbstractAssert<GradleProjectAssert, Pro
     }
 
     /**
-     * Tests whether the Gradle project contains the specified task of the specified type.
+     * Verifies that the Gradle project contains the specified task of the specified type.
      *
      * @param taskName Name of the tasks to check
      * @param type Expected type of the task
@@ -245,7 +245,7 @@ public class GradleProjectAssert extends AbstractAssert<GradleProjectAssert, Pro
     }
 
     /**
-     * Tests whether the Gradle project contains the specified task which implements the {@link Reporting} interface.
+     * Verifies that the Gradle project contains the specified task which implements the {@link Reporting} interface.
      *
      * @param taskName Name of the tasks to check
      * @return This assertion
@@ -262,7 +262,7 @@ public class GradleProjectAssert extends AbstractAssert<GradleProjectAssert, Pro
     }
 
     /**
-     * Tests whether the Gradle project contains a file with the specified pathname.
+     * Verifies that the Gradle project contains a file with the specified pathname.
      *
      * @param pathname  File to check relative to the root of the project
      * @return This assertion
@@ -275,7 +275,7 @@ public class GradleProjectAssert extends AbstractAssert<GradleProjectAssert, Pro
     }
 
     /**
-     * Tests whether the Gradle project contains a directory with the specified pathname.
+     * Verifies that the Gradle project contains a directory with the specified pathname.
      *
      * @param pathname  Directory to check relative to the root of the project
      * @return This assertion
@@ -288,7 +288,7 @@ public class GradleProjectAssert extends AbstractAssert<GradleProjectAssert, Pro
     }
 
     /**
-     * Tests whether the Gradle project build directory contains a file with the specified pathname.
+     * Verifies that the Gradle project build directory contains a file with the specified pathname.
      *
      * @param pathname  File to check relative to the {@code build} directory of the project
      * @return This assertion
@@ -301,7 +301,7 @@ public class GradleProjectAssert extends AbstractAssert<GradleProjectAssert, Pro
     }
 
     /**
-     * Tests whether the Gradle project build directory contains a directory with the specified pathname.
+     * Verifies that the Gradle project build directory contains a directory with the specified pathname.
      *
      * @param pathname  Directory to check relative to the {@code build} directory of the project
      * @return This assertion
@@ -314,7 +314,7 @@ public class GradleProjectAssert extends AbstractAssert<GradleProjectAssert, Pro
     }
 
     /**
-     * Tests whether the Gradle project contains a property with the specified name.
+     * Verifies that the Gradle project contains a property with the specified name.
      *
      * @param propertyName  Name of the property to check
      * @return This assertion
@@ -330,7 +330,7 @@ public class GradleProjectAssert extends AbstractAssert<GradleProjectAssert, Pro
     }
 
     /**
-     * Tests whether the Gradle project does not contain a property with the specified name.
+     * Verifies that the Gradle project does not contain a property with the specified name.
      *
      * @param propertyName  Name of the property to check
      * @return This assertion
@@ -346,7 +346,7 @@ public class GradleProjectAssert extends AbstractAssert<GradleProjectAssert, Pro
     }
 
     /**
-     * Tests whether the Gradle project contains a property with the specified name and the specified value.
+     * Verifies that the Gradle project contains a property with the specified name and the specified value.
      *
      * @param propertyName  Name of the property to check
      * @param propertyValue  Value of the property to check
@@ -365,7 +365,7 @@ public class GradleProjectAssert extends AbstractAssert<GradleProjectAssert, Pro
     }
 
     /**
-     * Tests whether the Gradle project does not contain a property with the specified name and the specified value.
+     * Verifies that the Gradle project does not contain a property with the specified name and the specified value.
      *
      * @param propertyName  Name of the property to check
      * @param propertyValue  Value of the property to check
