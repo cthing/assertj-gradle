@@ -12,25 +12,25 @@ The library is available from [Maven Central](https://repo.maven.apache.org/mave
 <dependency>
   <groupId>org.cthing</groupId>
   <artifactId>assertj-gradle</artifactId>
-  <version>1.0.0</version>
+  <version>2.0.0</version>
 </dependency>
 ```
 or the following Gradle dependency:
 ```kotlin
-implementation("org.cthing:assertj-gradle:1.0.0")
+implementation("org.cthing:assertj-gradle:2.0.0")
 ```
 
 ## Examples
 
 ### Asserting a Gradle Project Applies a Plugin
 ```java
-import static org.cthing.assertj.gradle.GradleProjectAssert.assertThat;
+import static org.cthing.assertj.gradle.GradleAssertions.assertThat;
 ...
 assertThat(project).hasPlugin("java");
 ```
 Multiple plugins can be checked in one call.
 ```java
-import static org.cthing.assertj.gradle.GradleProjectAssert.assertThat;
+import static org.cthing.assertj.gradle.GradleAssertions.assertThat;
 ...
 assertThat(project).hasPlugin("java", "checkstyle");
 ```
@@ -38,6 +38,14 @@ assertThat(project).hasPlugin("java", "checkstyle");
 ### Asserting a Gradle Project Contains a Task With Type
 ```java
 assertThat(project).hasTaskWithType(MyTask.class);
+```
+
+### Asserting a Gradle Property Contains a Specific Value
+```java
+import static org.cthing.assertj.gradle.GradleAssertions.assertThat;
+...
+final Property<String> myProperty = project.getObjects().property(String.class).convention("abcd");
+assertThat(myProperty).contains("abcd");
 ```
 
 ## Building
@@ -70,6 +78,7 @@ Perform the following steps to create a release.
 - Once it is enabled, press `Release` to release the artifacts to Maven Central
 - Log out
 - Wait for the new release to be available on Maven Central
+- Delete the file `assertj-gradle-bundle-<version>.jar`
 - In a browser, go to the project on GitHub
 - Generate a release with the tag `<version>`
 - In the build.gradle.kts file, edit the `ProjectVersion` object
