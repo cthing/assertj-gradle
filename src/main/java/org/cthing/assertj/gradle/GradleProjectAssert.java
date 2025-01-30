@@ -6,15 +6,21 @@
 package org.cthing.assertj.gradle;
 
 import java.io.File;
+import java.util.Arrays;
+import java.util.function.Consumer;
 
 import org.assertj.core.api.AbstractAssert;
+import org.assertj.core.api.Condition;
 import org.assertj.core.api.FileAssert;
+import org.assertj.core.internal.Conditions;
 import org.gradle.api.Project;
+import org.gradle.api.Task;
+import org.gradle.api.artifacts.Configuration;
 import org.gradle.api.reporting.Reporting;
 
 
 /**
- * Custom AssertJ assertions for unit testing a Gradle {@link Project}.
+ * AssertJ assertions for unit testing a Gradle {@link Project}.
  */
 @SuppressWarnings("UnusedReturnValue")
 public class GradleProjectAssert extends AbstractAssert<GradleProjectAssert, Project> {
@@ -41,39 +47,49 @@ public class GradleProjectAssert extends AbstractAssert<GradleProjectAssert, Pro
     /**
      * Verifies that the Gradle project contains the specified extensions.
      *
-     * @param extensionNames  Names of the project extensions to check
+     * @param extensionName  Name of first project extension to check
+     * @param extensionNames  Names of additional project extensions to check
      * @return This assertion
      */
-    public GradleProjectAssert hasExtension(final String... extensionNames) {
+    public GradleProjectAssert hasExtension(final String extensionName, final String... extensionNames) {
         isNotNull();
 
-        for (final String extensionName : extensionNames) {
-            if (this.actual.getExtensions().findByName(extensionName) == null) {
-                failWithMessage("Project '%s' does not contain the extension '%s'", this.actual.getName(),
-                                extensionName);
+        final Consumer<String> testExtension = name -> {
+            if (this.actual.getExtensions().findByName(name) == null) {
+                failWithMessage("Project '%s' does not contain the extension '%s'", this.actual.getName(), name);
             }
+        };
+
+        testExtension.accept(extensionName);
+        if (extensionNames.length > 0) {
+            Arrays.stream(extensionNames).forEach(testExtension);
         }
 
-        return this;
+        return this.myself;
     }
 
     /**
      * Verifies that the Gradle project does not contain the specified extensions.
      *
-     * @param extensionNames  Names of the project extensions to check
+     * @param extensionName  Name of first project extension to check
+     * @param extensionNames  Names of additional project extensions to check
      * @return This assertion
      */
-    public GradleProjectAssert doesNotHaveExtension(final String... extensionNames) {
+    public GradleProjectAssert doesNotHaveExtension(final String extensionName, final String... extensionNames) {
         isNotNull();
 
-        for (final String extensionName : extensionNames) {
-            if (this.actual.getExtensions().findByName(extensionName) != null) {
-                failWithMessage("Project '%s' should not contain the extension '%s'", this.actual.getName(),
-                                extensionName);
+        final Consumer<String> testExtension = name -> {
+            if (this.actual.getExtensions().findByName(name) != null) {
+                failWithMessage("Project '%s' should not contain the extension '%s'", this.actual.getName(), name);
             }
+        };
+
+        testExtension.accept(extensionName);
+        if (extensionNames.length > 0) {
+            Arrays.stream(extensionNames).forEach(testExtension);
         }
 
-        return this;
+        return this.myself;
     }
 
     /**
@@ -94,7 +110,7 @@ public class GradleProjectAssert extends AbstractAssert<GradleProjectAssert, Pro
                             type.getName(), extension.getClass().getName());
         }
 
-        return this;
+        return this.myself;
     }
 
     /**
@@ -112,117 +128,250 @@ public class GradleProjectAssert extends AbstractAssert<GradleProjectAssert, Pro
                             type.getName());
         }
 
-        return this;
+        return this.myself;
+    }
+
+    /**
+     * Verifies that the Gradle project contains an extension with the specified name and type and provides it to
+     * the given {@link Consumer} for further assertions.
+     *
+     * @param extensionsName Name of the project extension to check
+     * @param <T> type of the extension
+     * @param type Type of extension to check
+     * @param requirement Allows further assertions on the extension
+     * @return This assertion
+     */
+    @SuppressWarnings("unchecked")
+    public <T> GradleProjectAssert hasExtensionSatisfying(final String extensionsName, final Class<T> type,
+                                                          final Consumer<T> requirement) {
+        hasExtensionWithType(extensionsName, type);
+        requirement.accept((T)this.actual.getExtensions().getByName(extensionsName));
+        return this.myself;
+    }
+
+    /**
+     * Verifies that the Gradle project contains an extension with the specified name and type and which satisfies
+     * the given {@link Condition}.
+     *
+     * @param extensionsName Name of the project extension to check
+     * @param <T> type of the extension
+     * @param type Type of extension to check
+     * @param condition Condition to satisfy
+     * @return This assertion
+     */
+    @SuppressWarnings("unchecked")
+    public <T> GradleProjectAssert hasExtensionSatisfying(final String extensionsName, final Class<T> type,
+                                                          final Condition<T> condition) {
+        hasExtensionWithType(extensionsName, type);
+        Conditions.instance().assertIs(this.info, (T)this.actual.getExtensions().getByName(extensionsName), condition);
+        return this.myself;
+    }
+
+    /**
+     * Verifies that the Gradle project contains an extension with the specified type and provides it to
+     * the given {@link Consumer} for further assertions.
+     *
+     * @param <T> type of the extension
+     * @param type Type of extension to check
+     * @param requirement Allows further assertions on the extension
+     * @return This assertion
+     */
+    public <T> GradleProjectAssert hasExtensionSatisfying(final Class<T> type, final Consumer<T> requirement) {
+        hasExtensionWithType(type);
+        requirement.accept(this.actual.getExtensions().getByType(type));
+        return this.myself;
+    }
+
+    /**
+     * Verifies that the Gradle project contains an extension with the specified type and which satisfies
+     * the given {@link Condition}.
+     *
+     * @param <T> type of the extension
+     * @param type Type of extension to check
+     * @param condition Condition to satisfy
+     * @return This assertion
+     */
+    public <T> GradleProjectAssert hasExtensionSatisfying(final Class<T> type, final Condition<T> condition) {
+        hasExtensionWithType(type);
+        Conditions.instance().assertIs(this.info, this.actual.getExtensions().getByType(type), condition);
+        return this.myself;
     }
 
     /**
      * Verifies that the Gradle project contains the specified configurations.
      *
-     * @param configurationNames  Names of the project configurations to check
+     * @param configurationName Name of the first project configuration to check
+     * @param configurationNames Names of additional project configurations to check
      * @return This assertion
      */
-    public GradleProjectAssert hasConfiguration(final String... configurationNames) {
+    public GradleProjectAssert hasConfiguration(final String configurationName, final String... configurationNames) {
         isNotNull();
 
-        for (final String configurationName : configurationNames) {
-            if (this.actual.getConfigurations().findByName(configurationName) == null) {
-                failWithMessage("Project '%s' does not contain the configuration '%s'", this.actual.getName(),
-                                configurationName);
+        final Consumer<String> testConfiguration = name -> {
+            if (this.actual.getConfigurations().findByName(name) == null) {
+                failWithMessage("Project '%s' does not contain the configuration '%s'", this.actual.getName(), name);
             }
+        };
+
+        testConfiguration.accept(configurationName);
+        if (configurationNames.length > 0) {
+            Arrays.stream(configurationNames).forEach(testConfiguration);
         }
 
-        return this;
+        return this.myself;
     }
 
     /**
      * Verifies that the Gradle project does not contain the specified configurations.
      *
-     * @param configurationNames  Names of the project configurations to check
+     * @param configurationName Name of the first project configuration to check
+     * @param configurationNames Names of additional project configurations to check
      * @return This assertion
      */
-    public GradleProjectAssert doesNotHaveConfiguration(final String... configurationNames) {
+    public GradleProjectAssert doesNotHaveConfiguration(final String configurationName,
+                                                        final String... configurationNames) {
         isNotNull();
 
-        for (final String configurationName : configurationNames) {
-            if (this.actual.getConfigurations().findByName(configurationName) != null) {
+        final Consumer<String> testConfiguration = name -> {
+            if (this.actual.getConfigurations().findByName(name) != null) {
                 failWithMessage("Project '%s' should not contain the configuration '%s'", this.actual.getName(),
-                                configurationName);
+                                name);
             }
+        };
+
+        testConfiguration.accept(configurationName);
+        if (configurationNames.length > 0) {
+            Arrays.stream(configurationNames).forEach(testConfiguration);
         }
 
-        return this;
+        return this.myself;
+    }
+
+    /**
+     * Verifies that the Gradle project contains a configuration with the specified name and provides it to the given
+     * {@link Consumer} for further assertions.
+     *
+     * @param configurationName Name of the project configuration to check
+     * @param requirement Allows further assertions on the configuration
+     * @return This assertion
+     */
+    public GradleProjectAssert hasConfigurationSatisfying(final String configurationName,
+                                                          final Consumer<Configuration> requirement) {
+        hasConfiguration(configurationName);
+        requirement.accept(this.actual.getConfigurations().getByName(configurationName));
+        return this.myself;
+    }
+
+    /**
+     * Verifies that the Gradle project contains a configuration with the specified name and which satisfies
+     * the given {@link Condition}.
+     *
+     * @param configurationName Name of the project configuration to check
+     * @param condition Condition to satisfy
+     * @return This assertion
+     */
+    public GradleProjectAssert hasConfigurationSatisfying(final String configurationName,
+                                                          final Condition<? super Configuration> condition) {
+        hasConfiguration(configurationName);
+        Conditions.instance().assertIs(this.info, this.actual.getConfigurations().getByName(configurationName),
+                                       condition);
+        return this.myself;
     }
 
     /**
      * Verifies that the Gradle project contains the specified plugins.
      *
-     * @param pluginIds  Identifiers of the plugins to check
+     * @param pluginId  Identifier of first plugin to check
+     * @param pluginIds  Identifiers of additional plugins to check
      * @return This assertion
      */
-    public GradleProjectAssert hasPlugin(final String... pluginIds) {
+    public GradleProjectAssert hasPlugin(final String pluginId, final String... pluginIds) {
         isNotNull();
 
-        for (final String pluginId : pluginIds) {
-            if (this.actual.getPluginManager().findPlugin(pluginId) == null) {
-                failWithMessage("Project '%s' does not contain the plugin '%s'", this.actual.getName(), pluginId);
+        final Consumer<String> testPlugin = id -> {
+            if (this.actual.getPluginManager().findPlugin(id) == null) {
+                failWithMessage("Project '%s' does not contain the plugin '%s'", this.actual.getName(), id);
             }
+        };
+
+        testPlugin.accept(pluginId);
+        if (pluginIds.length > 0) {
+            Arrays.stream(pluginIds).forEach(testPlugin);
         }
 
-        return this;
+        return this.myself;
     }
 
     /**
      * Verifies that the Gradle project does not contain the specified plugins.
      *
-     * @param pluginIds  Identifiers of the plugins to check
+     * @param pluginId  Identifier of first plugin to check
+     * @param pluginIds  Identifiers of additional plugins to check
      * @return This assertion
      */
-    public GradleProjectAssert doesNotHavePlugin(final String... pluginIds) {
+    public GradleProjectAssert doesNotHavePlugin(final String pluginId, final String... pluginIds) {
         isNotNull();
 
-        for (final String pluginId : pluginIds) {
-            if (this.actual.getPluginManager().hasPlugin(pluginId)) {
-                failWithMessage("Project '%s' should not contain the plugin '%s'", this.actual.getName(), pluginId);
+        final Consumer<String> testPlugin = id -> {
+            if (this.actual.getPluginManager().hasPlugin(id)) {
+                failWithMessage("Project '%s' should not contain the plugin '%s'", this.actual.getName(), id);
             }
+        };
+
+        testPlugin.accept(pluginId);
+        if (pluginIds.length > 0) {
+            Arrays.stream(pluginIds).forEach(testPlugin);
         }
 
-        return this;
+        return this.myself;
     }
 
     /**
      * Verifies that the Gradle project contains the specified tasks.
      *
-     * @param taskNames  Names of the tasks to check
+     * @param taskName Name of the first task to check
+     * @param taskNames Names of additional tasks to check
      * @return This assertion
      */
-    public GradleProjectAssert hasTask(final String... taskNames) {
+    public GradleProjectAssert hasTask(final String taskName, final String... taskNames) {
         isNotNull();
 
-        for (final String taskName : taskNames) {
-            if (this.actual.getTasks().findByName(taskName) == null) {
-                failWithMessage("Project '%s' does not contain the task '%s'", this.actual.getName(), taskName);
+        final Consumer<String> testTask = name -> {
+            if (this.actual.getTasks().findByName(name) == null) {
+                failWithMessage("Project '%s' does not contain the task '%s'", this.actual.getName(), name);
             }
+        };
+
+        testTask.accept(taskName);
+        if (taskNames.length > 0) {
+            Arrays.stream(taskNames).forEach(testTask);
         }
 
-        return this;
+        return this.myself;
     }
 
     /**
      * Verifies that the Gradle project does not contain the specified tasks.
      *
-     * @param taskNames  Names of the tasks to check
+     * @param taskName Name of the first task to check
+     * @param taskNames Names of additional tasks to check
      * @return This assertion
      */
-    public GradleProjectAssert doesNotHaveTask(final String... taskNames) {
+    public GradleProjectAssert doesNotHaveTask(final String taskName, final String... taskNames) {
         isNotNull();
 
-        for (final String taskName : taskNames) {
-            if (this.actual.getTasks().findByName(taskName) != null) {
-                failWithMessage("Project '%s' should not contain the task '%s'", this.actual.getName(), taskName);
+        final Consumer<String> testTask = name -> {
+            if (this.actual.getTasks().findByName(name) != null) {
+                failWithMessage("Project '%s' should not contain the task '%s'", this.actual.getName(), name);
             }
+        };
+
+        testTask.accept(taskName);
+        if (taskNames.length > 0) {
+            Arrays.stream(taskNames).forEach(testTask);
         }
 
-        return this;
+        return this.myself;
     }
 
     /**
@@ -241,7 +390,7 @@ public class GradleProjectAssert extends AbstractAssert<GradleProjectAssert, Pro
                             type.getName(), task.getClass().getName());
         }
 
-        return this;
+        return this.myself;
     }
 
     /**
@@ -258,7 +407,75 @@ public class GradleProjectAssert extends AbstractAssert<GradleProjectAssert, Pro
             failWithMessage("Expected task '%s' to implement 'Reporting' but does not", taskName);
         }
 
-        return this;
+        return this.myself;
+    }
+
+    /**
+     * Verifies that the Gradle project contains a task with the specified name and provides it to
+     * the given {@link Consumer} for further assertions.
+     *
+     * @param taskName Name of the task to check
+     * @param requirement Allows further assertions on the task
+     * @return This assertion
+     */
+    public GradleProjectAssert hasTaskSatisfying(final String taskName, final Consumer<Task> requirement) {
+        hasTask(taskName);
+        requirement.accept(this.actual.getTasks().getByName(taskName));
+        return this.myself;
+
+    }
+
+    /**
+     * Verifies that the Gradle project contains a task with the specified name and type and provides it to
+     * the given {@link Consumer} for further assertions.
+     *
+     * @param taskName Name of the task to check
+     * @param <T> Type of the task to check
+     * @param type Type of the task to check
+     * @param requirement Allows further assertions on the task
+     * @return This assertion
+     */
+    @SuppressWarnings("unchecked")
+    public <T extends Task> GradleProjectAssert hasTaskSatisfying(final String taskName, final Class<T> type,
+                                                                  final Consumer<T> requirement) {
+        hasTaskWithType(taskName, type);
+        requirement.accept((T)this.actual.getTasks().getByName(taskName));
+        return this.myself;
+
+    }
+
+    /**
+     * Verifies that the Gradle project contains a task with the specified name and which satisfies
+     * the given {@link Condition}.
+     *
+     * @param taskName Name of the task to check
+     * @param condition Condition to satisfy
+     * @return This assertion
+     */
+    public GradleProjectAssert hasTaskSatisfying(final String taskName, final Condition<? super Task> condition) {
+        hasTask(taskName);
+        Conditions.instance().assertIs(this.info, this.actual.getTasks().getByName(taskName), condition);
+        return this.myself;
+
+    }
+
+    /**
+     * Verifies that the Gradle project contains a task with the specified name and type and which satisfies
+     * the given {@link Condition}.
+     *
+     * @param taskName Name of the task to check
+     * @param <T> Type of the task to check
+     * @param type Type of the task to check
+     * @param condition Condition to satisfy
+     * @return This assertion
+     */
+    @SuppressWarnings("unchecked")
+    public <T extends Task> GradleProjectAssert hasTaskSatisfying(final String taskName, final Class<T> type,
+                                                                  final Condition<? super Task> condition) {
+        hasTaskWithType(taskName, type);
+        Conditions.instance().assertIs(this.info, (T)this.actual.getTasks().getByName(taskName), condition);
+        return this.myself;
+
     }
 
     /**
@@ -271,7 +488,7 @@ public class GradleProjectAssert extends AbstractAssert<GradleProjectAssert, Pro
         isNotNull();
 
         new FileAssert(this.actual.file(pathname)).isFile();
-        return this;
+        return this.myself;
     }
 
     /**
@@ -284,7 +501,7 @@ public class GradleProjectAssert extends AbstractAssert<GradleProjectAssert, Pro
         isNotNull();
 
         new FileAssert(this.actual.file(pathname)).isDirectory();
-        return this;
+        return this.myself;
     }
 
     /**
@@ -297,7 +514,7 @@ public class GradleProjectAssert extends AbstractAssert<GradleProjectAssert, Pro
         isNotNull();
 
         new FileAssert(new File(this.actual.getLayout().getBuildDirectory().get().getAsFile(), pathname)).isFile();
-        return this;
+        return this.myself;
     }
 
     /**
@@ -310,7 +527,7 @@ public class GradleProjectAssert extends AbstractAssert<GradleProjectAssert, Pro
         isNotNull();
 
         new FileAssert(new File(this.actual.getLayout().getBuildDirectory().get().getAsFile(), pathname)).isDirectory();
-        return this;
+        return this.myself;
     }
 
     /**
@@ -326,7 +543,7 @@ public class GradleProjectAssert extends AbstractAssert<GradleProjectAssert, Pro
             failWithMessage("Project '%s' does not contain a property named '%s'", this.actual.getName(), propertyName);
         }
 
-        return this;
+        return this.myself;
     }
 
     /**
@@ -342,7 +559,7 @@ public class GradleProjectAssert extends AbstractAssert<GradleProjectAssert, Pro
             failWithMessage("Project '%s' should not contain a property named '%s'", this.actual.getName(), propertyName);
         }
 
-        return this;
+        return this.myself;
     }
 
     /**
@@ -361,7 +578,7 @@ public class GradleProjectAssert extends AbstractAssert<GradleProjectAssert, Pro
                             this.actual.getName(), propertyName, propertyValue.toString(), actualValueStr);
         }
 
-        return this;
+        return this.myself;
     }
 
     /**
@@ -381,6 +598,6 @@ public class GradleProjectAssert extends AbstractAssert<GradleProjectAssert, Pro
             }
         }
 
-        return this;
+        return this.myself;
     }
 }

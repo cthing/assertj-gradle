@@ -4,7 +4,7 @@
  */
 
 /**
- * Custom AssertJ assertions for Gradle plugin project tests.
+ * <a href="https://assertj.github.io/doc/">AssertJ</a> assertions for Gradle plugin project tests.
  */
 @NullMarked
 package org.cthing.assertj.gradle;

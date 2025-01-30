@@ -1,14 +1,17 @@
 /*
- * Copyright 2024 C Thing Software
+ * Copyright 2025 C Thing Software
  * SPDX-License-Identifier: Apache-2.0
  */
 
 package org.cthing.assertj.gradle;
 
+import java.io.File;
+import java.util.List;
 import java.util.Map;
 
 import org.assertj.core.api.Assertions;
 import org.assertj.core.api.Condition;
+import org.assertj.core.api.InstanceOfAssertFactories;
 import org.gradle.api.Project;
 import org.gradle.api.Transformer;
 import org.gradle.api.provider.MapProperty;
@@ -29,8 +32,6 @@ public class GradleProviderAssertTest {
     @BeforeEach
     public void setup() {
         this.project = ProjectBuilder.builder().build();
-        this.project.getPluginManager().apply("java");
-        this.project.getPluginManager().apply("checkstyle");
     }
 
     @Test
@@ -42,12 +43,12 @@ public class GradleProviderAssertTest {
         assertThat(property1).contains("value1");
         assertThatExceptionOfType(AssertionError.class)
                 .isThrownBy(() -> assertThat(property1).contains("value2"))
-                .withMessage("Expecting Provider to contain 'value2' but was 'value1'");
+                .withMessage("Expecting provider to contain 'value2' but was 'value1'");
 
         final Property<String> property2 = this.project.getObjects().property(String.class);
         assertThatExceptionOfType(AssertionError.class)
                 .isThrownBy(() -> assertThat(property2).contains("value1"))
-                .withMessage("Expecting Provider to contain 'value1' but was empty");
+                .withMessage("Expecting provider to contain 'value1' but was empty");
 
         final MapProperty<String, String> mapProperty = this.project.getObjects()
                                                                     .mapProperty(String.class, String.class)
@@ -79,12 +80,12 @@ public class GradleProviderAssertTest {
         assertThat(provider1).containsSame(value);
         assertThatExceptionOfType(AssertionError.class)
                 .isThrownBy(() -> assertThat(provider1).containsSame(12345))
-                .withMessage("Expecting Provider to contain value identical to '12345'");
+                .withMessage("Expecting provider to contain value identical to '12345'");
 
         final Property<Integer> property1 = this.project.getObjects().property(Integer.class);
         assertThatExceptionOfType(AssertionError.class)
                 .isThrownBy(() -> assertThat(property1).containsSame(12345))
-                .withMessage("Expecting Provider to contain '12345' but was empty");
+                .withMessage("Expecting provider to contain '12345' but was empty");
     }
 
     @Test
@@ -96,12 +97,12 @@ public class GradleProviderAssertTest {
         assertThat(property1).hasValue("value1");
         assertThatExceptionOfType(AssertionError.class)
                 .isThrownBy(() -> assertThat(property1).hasValue("value2"))
-                .withMessage("Expecting Provider to contain 'value2' but was 'value1'");
+                .withMessage("Expecting provider to contain 'value2' but was 'value1'");
 
         final Property<String> property2 = this.project.getObjects().property(String.class);
         assertThatExceptionOfType(AssertionError.class)
                 .isThrownBy(() -> assertThat(property2).hasValue("value1"))
-                .withMessage("Expecting Provider to contain 'value1' but was empty");
+                .withMessage("Expecting provider to contain 'value1' but was empty");
 
         final MapProperty<String, String> mapProperty = this.project.getObjects()
                                                                     .mapProperty(String.class, String.class)
@@ -110,7 +111,7 @@ public class GradleProviderAssertTest {
     }
 
     @Test
-    public void testHashValueSatisfyingConsumer() {
+    public void testHasValueSatisfyingConsumer() {
         final Provider<String> provider1 = this.project.provider(() -> "test");
         assertThat(provider1).hasValueSatisfying(s -> Assertions.assertThat(s).isEqualTo("test"));
 
@@ -125,7 +126,7 @@ public class GradleProviderAssertTest {
     }
 
     @Test
-    public void testHashValueSatisfyingCondition() {
+    public void testHasValueSatisfyingCondition() {
         final Condition<String> condition = new Condition<>("test"::equals, "testing");
 
         final Provider<String> provider1 = this.project.provider(() -> "test");
@@ -159,12 +160,12 @@ public class GradleProviderAssertTest {
         final Provider<String> provider1 = this.project.provider(() -> "test");
         assertThatExceptionOfType(AssertionError.class)
                 .isThrownBy(() -> assertThat(provider1).isEmpty())
-                .withMessage("Expecting Provider to be empty but contains 'provider(?)'");
+                .withMessage("Expecting provider to be empty but contains 'provider(?)'");
 
         final Property<String> property1 = this.project.getObjects().property(String.class).convention("value1");
         assertThatExceptionOfType(AssertionError.class)
                 .isThrownBy(() -> assertThat(property1).isEmpty())
-                .withMessage("Expecting Provider to be empty but contains 'property(java.lang.String, fixed(class java.lang.String, value1))'");
+                .withMessage("Expecting provider to be empty but contains 'property(java.lang.String, fixed(class java.lang.String, value1))'");
 
         final Property<String> property2 = this.project.getObjects().property(String.class);
          assertThat(property2).isEmpty();
@@ -181,6 +182,25 @@ public class GradleProviderAssertTest {
         final Property<String> property2 = this.project.getObjects().property(String.class);
         assertThatExceptionOfType(AssertionError.class)
                 .isThrownBy(() -> assertThat(property2).get().isNotNull())
+                .withMessage("Expecting 'property(java.lang.String, undefined)' to contain a value, but it was empty");
+    }
+
+    @Test
+    public void testGetWithFactory() {
+        final Provider<String> provider1 = this.project.provider(() -> "test");
+        assertThat(provider1).get(InstanceOfAssertFactories.STRING).isEqualTo("test");
+
+        final Provider<List<String>> provider2 = this.project.provider(() -> List.of("a", "b"));
+        assertThat(provider2).get(InstanceOfAssertFactories.LIST).containsExactly("a", "b");
+
+        final Property<File> property1 = this.project.getObjects()
+                                                     .property(File.class)
+                                                     .convention(new File("build/a.txt"));
+        assertThat(property1).get(InstanceOfAssertFactories.FILE).hasName("a.txt");
+
+        final Property<String> property2 = this.project.getObjects().property(String.class);
+        assertThatExceptionOfType(AssertionError.class)
+                .isThrownBy(() -> assertThat(property2).get(InstanceOfAssertFactories.STRING).isNotNull())
                 .withMessage("Expecting 'property(java.lang.String, undefined)' to contain a value, but it was empty");
     }
 
