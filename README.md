@@ -4,7 +4,17 @@
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.cthing/assertj-gradle/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.cthing/assertj-gradle)
 [![javadoc](https://javadoc.io/badge2/org.cthing/assertj-gradle/javadoc.svg)](https://javadoc.io/doc/org.cthing/assertj-gradle)
 
-This Java library provides custom [AssertJ](https://assertj.github.io/doc/) assertions for Gradle plugin project tests.
+This Java library provides custom [AssertJ](https://assertj.github.io/doc/) assertions for Gradle plugin project tests. Assertions
+are provided for the following Gradle objects:
+
+- [Configuration](https://docs.gradle.org/current/javadoc/org/gradle/api/artifacts/Configuration.html)
+- [Directory](https://docs.gradle.org/current/javadoc/org/gradle/api/file/Directory.html)
+- [DirectoryProperty](https://docs.gradle.org/current/javadoc/org/gradle/api/file/DirectoryProperty.html)
+- [FileCollection](https://docs.gradle.org/current/javadoc/org/gradle/api/file/FileCollection.html)
+- [Project](https://docs.gradle.org/current/javadoc/org/gradle/api/Project.html)
+- [RegularFile](https://docs.gradle.org/current/javadoc/org/gradle/api/file/RegularFile.html)
+- [RegularFileProperty](https://docs.gradle.org/current/javadoc/org/gradle/api/file/RegularFileProperty.html)
+- [Task](https://docs.gradle.org/current/javadoc/org/gradle/api/Task.html)
 
 ## Usage
 The library is available from [Maven Central](https://repo.maven.apache.org/maven2/org/cthing/assertj-gradle/) using the following Maven dependency:
@@ -12,12 +22,12 @@ The library is available from [Maven Central](https://repo.maven.apache.org/mave
 <dependency>
   <groupId>org.cthing</groupId>
   <artifactId>assertj-gradle</artifactId>
-  <version>2.0.0</version>
+  <version>3.0.0</version>
 </dependency>
 ```
 or the following Gradle dependency:
 ```kotlin
-implementation("org.cthing:assertj-gradle:2.0.0")
+implementation("org.cthing:assertj-gradle:3.0.0")
 ```
 
 ## Examples

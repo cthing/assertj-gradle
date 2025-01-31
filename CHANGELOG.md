@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+## [3.0.0] - 2025-01-31
+
 ### Added
 
 - Methods on `GradleProjectAssert` for "satisfying" assertions on extensions, configurations and tasks
@@ -51,6 +53,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - First release
 
-[unreleased]: https://github.com/cthing/assertj-gradle/compare/2.0.0...HEAD
+[unreleased]: https://github.com/cthing/assertj-gradle/compare/3.0.0...HEAD
+[3.0.0]: https://github.com/cthing/assertj-gradle/releases/tag/3.0.0
 [2.0.0]: https://github.com/cthing/assertj-gradle/releases/tag/2.0.0
 [1.0.0]: https://github.com/cthing/assertj-gradle/releases/tag/1.0.0
