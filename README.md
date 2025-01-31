@@ -87,3 +87,4 @@ Perform the following steps to create a release.
 - Update the `CHANGELOG.md` with the changes in the release and prepare for next release changes
 - Update the `Usage` section in the `README.md` with the latest artifact release version
 - Commit these changes
+- Force javadoc.io site to update by going to https://javadoc.io/doc/org.cthing/assertj-gradle/latest?force=1
