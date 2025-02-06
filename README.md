@@ -58,6 +58,9 @@ final Property<String> myProperty = project.getObjects().property(String.class).
 assertThat(myProperty).contains("abcd");
 ```
 
+See the [Gradle Plugin Unit Testing](https://www.cthing.com/#/blog/gradlePluginUnitTesting) blog post
+for addtional information and examples. 
+
 ## Building
 The library is compiled for Java 17. If a Java 17 toolchain is not available, one will be downloaded.
 
