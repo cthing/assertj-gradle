@@ -32,12 +32,12 @@ public class GradleRegularFilePropertyAssertTest {
     }
 
     @Test
-    public void testAsFile() {
+    public void testGetFile() {
         assertThat(this.regularFile).getFile().exists();
     }
 
     @Test
-    public void testAsString() {
+    public void testGetString() {
         assertThat(this.regularFile).getString().endsWith("test.txt");
     }
 }

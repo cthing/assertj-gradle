@@ -32,12 +32,12 @@ public class GradleDirectoryPropertyAssertTest {
     }
 
     @Test
-    public void testAsFile() {
+    public void testGetFile() {
         assertThat(this.directory).getFile().exists();
     }
 
     @Test
-    public void testAsString() {
+    public void testGetString() {
         assertThat(this.directory).getString().endsWith("test");
     }
 }
