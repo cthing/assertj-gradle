@@ -1,7 +1,7 @@
 # ![C Thing Software](https://www.cthing.com/branding/CThingSoftware-57x60.png "C Thing Software") assertj-gradle
 
 [![CI](https://github.com/cthing/assertj-gradle/actions/workflows/ci.yml/badge.svg)](https://github.com/cthing/assertj-gradle/actions/workflows/ci.yml)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.cthing/assertj-gradle/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.cthing/assertj-gradle)
+[![Maven Central Version](https://img.shields.io/maven-central/v/org.cthing/assertj-gradle)](https://central.sonatype.com/artifact/org.cthing/assertj-gradle)
 [![javadoc](https://javadoc.io/badge2/org.cthing/assertj-gradle/javadoc.svg)](https://javadoc.io/doc/org.cthing/assertj-gradle)
 
 This Java library provides custom [AssertJ](https://assertj.github.io/doc/) assertions for Gradle plugin project tests. Assertions
