@@ -16,6 +16,7 @@ import org.gradle.api.Task;
 import org.gradle.api.artifacts.Configuration;
 import org.gradle.api.provider.Provider;
 import org.gradle.testfixtures.ProjectBuilder;
+import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -40,7 +41,7 @@ public class GradleProjectAssertTest {
 
 
     private Project project;
-    private Provider<Project> provider;
+    private Provider<@NonNull Project> provider;
 
     @BeforeEach
     public void setup() {

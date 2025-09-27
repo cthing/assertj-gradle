@@ -29,7 +29,7 @@ plugins {
     alias(libs.plugins.versions)
 }
 
-version = ProjectVersion("3.0.1", BuildType.snapshot)
+version = ProjectVersion("4.0.0", BuildType.snapshot)
 group = "org.cthing"
 description = "Custom AssertJ assertions for Gradle plugin project tests."
 

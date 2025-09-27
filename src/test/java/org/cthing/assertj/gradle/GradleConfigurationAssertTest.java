@@ -9,6 +9,7 @@ import org.gradle.api.Project;
 import org.gradle.api.artifacts.Configuration;
 import org.gradle.api.provider.Provider;
 import org.gradle.testfixtures.ProjectBuilder;
+import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -27,7 +28,7 @@ public class GradleConfigurationAssertTest {
 
     @Test
     public void testInstanceFactory() {
-        final Provider<Configuration> provider = this.project.getConfigurations().register("config");
+        final Provider<@NonNull Configuration> provider = this.project.getConfigurations().register("config");
         assertThat(provider).get(GradleAssertFactories.CONFIGURATION).hasName("config");
     }
 
@@ -108,24 +109,6 @@ public class GradleConfigurationAssertTest {
         assertThatExceptionOfType(AssertionError.class)
                 .isThrownBy(() -> assertThat(configuration2).isTransitive())
                 .withMessage("Expected configuration 'config2' to be transitive, but it is not");
-
-    }
-
-    @Test
-    public void testIsVisible() {
-        final Configuration configuration1 = this.project.getConfigurations().create("config1");
-        configuration1.setVisible(true);
-        final Configuration configuration2 = this.project.getConfigurations().create("config2");
-        configuration2.setVisible(false);
-
-        assertThat(configuration1).isVisible();
-        assertThat(configuration2).isNotVisible();
-        assertThatExceptionOfType(AssertionError.class)
-                .isThrownBy(() -> assertThat(configuration1).isNotVisible())
-                .withMessage("Expected configuration 'config1' not to be visible, but it is");
-        assertThatExceptionOfType(AssertionError.class)
-                .isThrownBy(() -> assertThat(configuration2).isVisible())
-                .withMessage("Expected configuration 'config2' to be visible, but it is not");
 
     }
 }

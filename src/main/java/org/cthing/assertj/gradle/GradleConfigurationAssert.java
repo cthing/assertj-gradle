@@ -144,34 +144,4 @@ public class GradleConfigurationAssert
 
         return this.myself;
     }
-
-    /**
-     * Verifies that the configuration is visible.
-     *
-     * @return This assertion
-     */
-    public GradleConfigurationAssert isVisible() {
-        isNotNull();
-
-        if (!this.actual.isVisible()) {
-            failWithMessage("Expected configuration '%s' to be visible, but it is not", this.actual.getName());
-        }
-
-        return this.myself;
-    }
-
-    /**
-     * Verifies that the configuration is not visible.
-     *
-     * @return This assertion
-     */
-    public GradleConfigurationAssert isNotVisible() {
-        isNotNull();
-
-        if (this.actual.isVisible()) {
-            failWithMessage("Expected configuration '%s' not to be visible, but it is", this.actual.getName());
-        }
-
-        return this.myself;
-    }
 }

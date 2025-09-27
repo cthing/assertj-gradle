@@ -14,6 +14,7 @@ import org.gradle.api.provider.Provider;
 import org.gradle.api.tasks.InputFile;
 import org.gradle.api.tasks.OutputFile;
 import org.gradle.testfixtures.ProjectBuilder;
+import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -43,7 +44,7 @@ public class GradleTaskAssertTest {
             return this.prop;
         }
 
-        public void setProp(final String prop) {
+        public void setProp(@Nullable final String prop) {
             this.prop = prop;
         }
 
@@ -53,7 +54,7 @@ public class GradleTaskAssertTest {
             return this.prop2;
         }
 
-        public void setProp2(final File prop2) {
+        public void setProp2(@Nullable final File prop2) {
             this.prop2 = prop2;
         }
 
@@ -63,16 +64,16 @@ public class GradleTaskAssertTest {
             return this.prop3;
         }
 
-        public void setProp3(final File prop3) {
+        public void setProp3(@Nullable final File prop3) {
             this.prop3 = prop3;
         }
     }
 
     private Project project;
-    private Provider<TestTask> testTaskProvider1;
-    private Provider<TestTask> testTaskProvider2;
-    private Provider<TestTask> testTaskProvider3;
-    private Provider<TestTask> testTaskProvider4;
+    private Provider<@NonNull TestTask> testTaskProvider1;
+    private Provider<@NonNull TestTask> testTaskProvider2;
+    private Provider<@NonNull TestTask> testTaskProvider3;
+    private Provider<@NonNull TestTask> testTaskProvider4;
     private TestTask testTask1;
 
     @BeforeEach

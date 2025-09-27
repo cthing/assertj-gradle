@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+### Removed
+
+- The `GradleConfigurationAssert.isVisible()` and `GradleConfigurationAssert.isNotVisible()` methods
+  have been removed because the `Configuration.isVisible()` method no longer has any meaning and has
+  been deprecated.
+
 ## [3.0.0] - 2025-01-31
 
 ### Added
